@@ -198,6 +198,7 @@
       <antcall target="webstartfilter" />
       <antcall target="busservicelib" />
       <antcall target="daemonlib" />
+      <antcall target="sqldaemonlib" />
       <antcall target="domainlib" />
       <antcall target="portallib" />
     </sequential>
@@ -210,6 +211,7 @@
       <antcall target="webstartfilter" />
       <antcall target="busservicenolib" />
       <antcall target="daemonnolib" />
+      <antcall target="sqldaemonnolib" />
       <antcall target="domainnolib" />
       <antcall target="portalnolib" />
     </sequential>
