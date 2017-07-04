@@ -207,11 +207,19 @@
     </sequential>
   </target>
 
-  <target name="buildpartial" description="Build API, DOMAIN, and PORTAL">
+  <target name="buildpartiallib" description="Build API, DOMAIN, and PORTAL with libraries">
     <sequential>
       <antcall target="api" />
-      <antcall target="domain" />
-      <antcall target="portal" />
+      <antcall target="domainlib" />
+      <antcall target="portallib" />
+    </sequential>
+  </target>
+
+  <target name="buildpartialnolib" description="Build API, DOMAIN, and PORTAL without libraries">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="domainnolib" />
+      <antcall target="portalnolib" />
     </sequential>
   </target>
 
