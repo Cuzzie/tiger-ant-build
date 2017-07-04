@@ -99,6 +99,13 @@
     </exec>
     <move file="${workspacedir}\DOMAIN\target\DOMAIN.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\DOMAIN\target\DOMAIN" />
+  </target>
+
+  <target name="domainlib" description="Build Domain with libraries" depends="domain">
+    <move file="${workspacedir}\DOMAIN\target\DOMAIN-lib.zip" todir="${tomeelibzipdir}" />
+  </target>
+
+  <target name="domainnolib" description="Build Domain without libraries" depends="domain">
     <delete file="${workspacedir}\DOMAIN\target\DOMAIN-lib.zip" />
   </target>
 
