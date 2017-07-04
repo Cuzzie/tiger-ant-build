@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <property name="workspacedir" location="C:\Users\KLE10\Perforce\KelwinWorkspace" />
+  <property name="tomcatdir" location="C:\Tiger\apache-tomcat-8.0.36" />
+  <property name="tomeedir" location="C:\Tiger\apache-tomee-webprofile-1.7.4" />
+  <property name="tomcatwebappsdir" location="${tomcatdir}\webapps" />
+  <property name="tomeewebappsdir" location="${tomeedir}\webapps" />
+  <property name="tomcatbindir" location="${tomcatdir}\bin" />
+  <property name="tomeebindir" location="${tomeedir}\bin" />
+  <property name="cleaninstallcmd" value="/c mvn clean install -U" />
+  <property name="cleanpackagecmd" value="/c mvn clean package -P" />
+  <property name="argscmd" value="-Dmaven.test.skip=true -Drepo.revision=000001" />
+  <property name="argsappenvcmd" value="-Dmaven.test.skip=true -Drepo.revision=000001 -DAPP_ENV=dev" />
+
+  <target name="cleanadmin" description="Clean ADMIN">
+    <delete dir="${tomcatwebappsdir}\ADMIN" />
+  </target>
+
+  <target name="cleanroot" description="Clean ROOT">
+    <delete dir="${tomcatwebappsdir}\ROOT" />
+  </target>
+
+  <target name="cleanbusservice" description="Clean BUS-SERVICE">
+    <delete dir="${tomeewebappsdir}\BUS-SERVICE" />
+  </target>
+
+  <target name="cleandaemon" description="Clean DAEMONs">
+    <delete dir="${tomeewebappsdir}\DAEMON" />
+    <delete dir="${tomeewebappsdir}\SQLDAEMON" />
+  </target>
+
+  <target name="cleandomain" description="Clean DOMAIN">
+    <delete dir="${tomeewebappsdir}\DOMAIN" />
+  </target>
+
+  <target name="api" description="Build API module">
+    <exec dir="${workspacedir}\API" executable="cmd">
+      <arg line="${cleaninstallcmd}" />
+    </exec>
+  </target>
+
+  <target name="busclient" description="Build BUS Client">
+    <exec dir="${workspacedir}\BUS-CLIENT" executable="cmd">
+      <arg line="${cleaninstallcmd}" />
+    </exec>
+  </target>
+
+  <target name="webstartfilter" description="Build Webstart Filter">
+    <exec dir="${workspacedir}\WebstartFilter" executable="cmd">
+      <arg line="${cleaninstallcmd}" />
+    </exec>
+  </target>
+
+  <target name="busservice" description="Build BUS Service" depends="cleanbusservice">
+    <exec dir="${workspacedir}\BUS-SERVICE" executable="cmd">
+      <arg line="${cleanpackagecmd} master ${argsappenvcmd}" />
+    </exec>
+    <move file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE.war" todir="${tomeewebappsdir}" />
+    <delete dir="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE" />
+    <delete file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE-lib.zip" />
+  </target>
+
+  <target name="daemon" description="Build Daemon" depends="cleandaemon">
+    <exec dir="${workspacedir}\DAEMON" executable="cmd">
+      <arg line="${cleanpackagecmd} daemon ${argscmd}" />
+    </exec>
+    <move file="${workspacedir}\DAEMON\target\DAEMON.war" todir="${tomeewebappsdir}" />
+    <delete dir="${workspacedir}\DAEMON\target\DAEMON" />
+    <delete file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" />
+
+    <exec dir="${workspacedir}\DAEMON" executable="cmd">
+      <arg line="${cleanpackagecmd} sqldaemon ${argscmd}" />
+    </exec>
+    <move file="${workspacedir}\DAEMON\target\SQLDAEMON.war" todir="${tomeewebappsdir}" />
+    <delete dir="${workspacedir}\DAEMON\target\SQLDAEMON" />
+    <delete file="${workspacedir}\DAEMON\target\SQLDAEMON-lib.zip" />
+  </target>
+
+  <target name="domain" description="Build Domain" depends="cleandomain">
+    <exec dir="${workspacedir}\DOMAIN" executable="cmd">
+      <arg line="${cleanpackagecmd} domain ${argsappenvcmd}" />
+    </exec>
+    <move file="${workspacedir}\DOMAIN\target\DOMAIN.war" todir="${tomeewebappsdir}" />
+    <delete dir="${workspacedir}\DOMAIN\target\DOMAIN" />
+    <delete file="${workspacedir}\DOMAIN\target\DOMAIN-lib.zip" />
+  </target>
+
+  <target name="admin" description="Build Admin" depends="cleanadmin">
+    <exec dir="${workspacedir}\WEB" executable="cmd">
+      <arg line="${cleanpackagecmd} admin ${argscmd}" />
+    </exec>
+    <move file="${workspacedir}\WEB\target\ADMIN.war" todir="${tomcatwebappsdir}" />
+    <delete dir="${workspacedir}\WEB\target\ADMIN" />
+    <delete file="${workspacedir}\WEB\target\ADMIN-lib.zip" />
+  </target>
+
+  <target name="root" description="Build Root" depends="cleanroot">
+    <exec dir="${workspacedir}\PORTAL" executable="cmd">
+      <arg line="${cleanpackagecmd} portal ${argscmd}" />
+    </exec>
+    <move file="${workspacedir}\PORTAL\target\ROOT.war" todir="${tomcatwebappsdir}" />
+    <delete dir="${workspacedir}\PORTAL\target\ROOT" />
+    <delete file="${workspacedir}\PORTAL\target\ROOT-lib.zip" />
+  </target>
+
+  <target name="portal" description="Build Portal (Both Root and Admin)" depends="admin, root" />
+
+  <condition property="tomcat.up">
+    <socket server="localhost" port="8080" />
+  </condition>
+
+  <condition property="tomee.up">
+    <socket server="localhost" port="8889" />
+  </condition>
+
+  <target name="killtomcat" description="Kill Tomcat instance" if="tomcat.up">
+    <exec dir="${tomcatbindir}" executable="cmd">
+      <arg line="/c shutdown.bat" />
+    </exec>
+  </target>
+
+  <target name="killtomee" description="Kill TomEE instance" if="tomee.up">
+    <exec dir="${tomeebindir}" executable="cmd">
+      <arg line="/c shutdown.bat" />
+    </exec>
+  </target>
+
+  <target name="killservers" description="Kill Tomcat and TomEE instances" depends="killtomee, killtomcat" />
+
+  <target name="starttomcat" description="Start Tomcat instance" depends="killtomcat">
+    <sleep seconds="7"/>
+    <exec dir="${tomcatbindir}" executable="cmd">
+      <arg line="/c startup.bat" />
+    </exec>
+  </target>
+
+  <target name="starttomee" description="Start TomEE instance" depends="killtomee">
+    <sleep seconds="7"/>
+    <exec dir="${tomeebindir}" executable="cmd">
+      <arg line="/c startup.bat" />
+    </exec>
+  </target>
+
+  <target name="startservers" description="Start Tomcat and TomEE instances" depends="starttomee, starttomcat" />
+
+  <target name="buildall" description="Build everything">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="busclient" />
+      <antcall target="webstartfilter" />
+      <antcall target="busservice" />
+      <antcall target="daemon" />
+      <antcall target="domain" />
+      <antcall target="portal" />
+    </sequential>
+  </target>
+
+  <target name="buildpartial" description="Build API, DOMAIN, and PORTAL">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="domain" />
+      <antcall target="portal" />
+    </sequential>
+  </target>
+
+</project>
