@@ -53,7 +53,7 @@
     </exec>
   </target>
 
-  <target name="busservice" description="Build BUS Service" depends="cleanbusservice">
+  <target name="-busservice" description="Build BUS Service" depends="cleanbusservice">
     <exec dir="${workspacedir}\BUS-SERVICE" executable="cmd">
       <arg line="${cleanpackagecmd} master ${argsappenvcmd}" />
     </exec>
@@ -61,21 +61,31 @@
     <delete dir="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE" />
   </target>
 
-  <target name="busservicelib" description="Build BUS Service with libraries" depends="busservice">
+  <target name="busservicelib" description="Build BUS Service with libraries" depends="-busservice">
     <move file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE-lib.zip" todir="${tomeelibzipdir}" />
   </target>
 
-  <target name="busservicenolib" description="Build BUS Service without libraries" depends="busservice">
+  <target name="busservicenolib" description="Build BUS Service without libraries" depends="-busservice">
     <delete file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE-lib.zip" />
   </target>
 
-  <target name="daemon" description="Build Daemon" depends="cleandaemon">
+  <target name="-daemon" description="Build Daemon" depends="cleandaemon">
     <exec dir="${workspacedir}\DAEMON" executable="cmd">
       <arg line="${cleanpackagecmd} daemon ${argscmd}" />
     </exec>
     <move file="${workspacedir}\DAEMON\target\DAEMON.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\DAEMON\target\DAEMON" />
+  </target>
 
+  <target name="daemonlib" description="Build Daemon with libraries" depends="-daemon">
+    <move file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" todir="${tomeelibzipdir}" />
+  </target>
+
+  <target name="daemonnolib" description="Build Daemon without libraries" depends="-daemon">
+    <delete file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" />
+  </target>
+
+  <target name="-sqldaemon" description="Build SQL Daemon" depends="cleandaemon">
     <exec dir="${workspacedir}\DAEMON" executable="cmd">
       <arg line="${cleanpackagecmd} sqldaemon ${argscmd}" />
     </exec>
@@ -83,17 +93,15 @@
     <delete dir="${workspacedir}\DAEMON\target\SQLDAEMON" />
   </target>
 
-  <target name="daemonlib" description="Build Daemon with libraries" depends="daemon">
-    <move file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" todir="${tomeelibzipdir}" />
+  <target name="sqldaemonlib" description="Build Daemon with libraries" depends="-sqldaemon">
     <move file="${workspacedir}\DAEMON\target\SQLDAEMON-lib.zip" todir="${tomeelibzipdir}" />
   </target>
 
-  <target name="daemonnolib" description="Build Daemon without libraries" depends="daemon">
-    <delete file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" />
+  <target name="sqldaemonnolib" description="Build Daemon without libraries" depends="-sqldaemon">
     <delete file="${workspacedir}\DAEMON\target\SQLDAEMON-lib.zip" />
   </target>
 
-  <target name="domain" description="Build Domain" depends="cleandomain">
+  <target name="-domain" description="Build Domain" depends="cleandomain">
     <exec dir="${workspacedir}\DOMAIN" executable="cmd">
       <arg line="${cleanpackagecmd} domain ${argsappenvcmd}" />
     </exec>
@@ -101,15 +109,15 @@
     <delete dir="${workspacedir}\DOMAIN\target\DOMAIN" />
   </target>
 
-  <target name="domainlib" description="Build Domain with libraries" depends="domain">
+  <target name="domainlib" description="Build Domain with libraries" depends="-domain">
     <move file="${workspacedir}\DOMAIN\target\DOMAIN-lib.zip" todir="${tomeelibzipdir}" />
   </target>
 
-  <target name="domainnolib" description="Build Domain without libraries" depends="domain">
+  <target name="domainnolib" description="Build Domain without libraries" depends="-domain">
     <delete file="${workspacedir}\DOMAIN\target\DOMAIN-lib.zip" />
   </target>
 
-  <target name="admin" description="Build Admin" depends="cleanadmin">
+  <target name="-admin" description="Build Admin" depends="cleanadmin">
     <exec dir="${workspacedir}\WEB" executable="cmd">
       <arg line="${cleanpackagecmd} admin ${argscmd}" />
     </exec>
@@ -117,15 +125,15 @@
     <delete dir="${workspacedir}\WEB\target\ADMIN" />
   </target>
 
-  <target name="adminlib" description="Build Admin with libraries" depends="admin">
+  <target name="adminlib" description="Build Admin with libraries" depends="-admin">
     <move file="${workspacedir}\WEB\target\ADMIN-lib.zip" todir="${tomcatlibzipdir}" />
   </target>
 
-  <target name="adminnolib" description="Build Admin without libraries" depends="admin">
+  <target name="adminnolib" description="Build Admin without libraries" depends="-admin">
     <delete file="${workspacedir}\WEB\target\ADMIN-lib.zip" />
   </target>
 
-  <target name="root" description="Build Root" depends="cleanroot">
+  <target name="-root" description="Build Root" depends="cleanroot">
     <exec dir="${workspacedir}\PORTAL" executable="cmd">
       <arg line="${cleanpackagecmd} portal ${argscmd}" />
     </exec>
@@ -133,11 +141,11 @@
     <delete dir="${workspacedir}\PORTAL\target\ROOT" />
   </target>
 
-  <target name="rootlib" description="Build Root with libraries" depends="root">
+  <target name="rootlib" description="Build Root with libraries" depends="-root">
     <move file="${workspacedir}\PORTAL\target\ROOT-lib.zip" todir="${tomcatlibzipdir}" />
   </target>
 
-  <target name="rootnolib" description="Build Root without libraries" depends="root">
+  <target name="rootnolib" description="Build Root without libraries" depends="-root">
     <delete file="${workspacedir}\PORTAL\target\ROOT-lib.zip" />
   </target>
 
