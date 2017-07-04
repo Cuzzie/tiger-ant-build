@@ -4,7 +4,9 @@
   <property name="tomcatdir" location="C:\Tiger\apache-tomcat-8.0.36" />
   <property name="tomeedir" location="C:\Tiger\apache-tomee-webprofile-1.7.4" />
   <property name="tomcatwebappsdir" location="${tomcatdir}\webapps" />
+  <property name="tomcatlibzipdir" location="${tomcatdir}\libzip" />
   <property name="tomeewebappsdir" location="${tomeedir}\webapps" />
+  <property name="tomeelibzipdir" location="${tomeedir}\libzip" />
   <property name="tomcatbindir" location="${tomcatdir}\bin" />
   <property name="tomeebindir" location="${tomeedir}\bin" />
   <property name="cleaninstallcmd" value="/c mvn clean install -U" />
@@ -57,6 +59,13 @@
     </exec>
     <move file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE" />
+  </target>
+
+  <target name="busservicelib" description="Build BUS Service with libraries" depends="busservice">
+    <move file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE-lib.zip" todir="${tomeelibzipdir}" />
+  </target>
+
+  <target name="busservicenolib" description="Build BUS Service without libraries" depends="busservice">
     <delete file="${workspacedir}\BUS-SERVICE\target\BUS-SERVICE-lib.zip" />
   </target>
 
@@ -66,13 +75,21 @@
     </exec>
     <move file="${workspacedir}\DAEMON\target\DAEMON.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\DAEMON\target\DAEMON" />
-    <delete file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" />
 
     <exec dir="${workspacedir}\DAEMON" executable="cmd">
       <arg line="${cleanpackagecmd} sqldaemon ${argscmd}" />
     </exec>
     <move file="${workspacedir}\DAEMON\target\SQLDAEMON.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\DAEMON\target\SQLDAEMON" />
+  </target>
+
+  <target name="daemonlib" description="Build Daemon with libraries" depends="daemon">
+    <move file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" todir="${tomeelibzipdir}" />
+    <move file="${workspacedir}\DAEMON\target\SQLDAEMON-lib.zip" todir="${tomeelibzipdir}" />
+  </target>
+
+  <target name="daemonnolib" description="Build Daemon without libraries" depends="daemon">
+    <delete file="${workspacedir}\DAEMON\target\DAEMON-lib.zip" />
     <delete file="${workspacedir}\DAEMON\target\SQLDAEMON-lib.zip" />
   </target>
 
