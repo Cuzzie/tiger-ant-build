@@ -183,15 +183,27 @@
 
   <target name="startservers" description="Start Tomcat and TomEE instances" depends="starttomee, starttomcat" />
 
-  <target name="buildall" description="Build everything">
+  <target name="buildalllib" description="Build everything with libraries">
     <sequential>
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
-      <antcall target="busservice" />
-      <antcall target="daemon" />
-      <antcall target="domain" />
-      <antcall target="portal" />
+      <antcall target="busservicelib" />
+      <antcall target="daemonlib" />
+      <antcall target="domainlib" />
+      <antcall target="portallib" />
+    </sequential>
+  </target>
+
+  <target name="buildallnolib" description="Build everything without libraries">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="busclient" />
+      <antcall target="webstartfilter" />
+      <antcall target="busservicenolib" />
+      <antcall target="daemonnolib" />
+      <antcall target="domainnolib" />
+      <antcall target="portalnolib" />
     </sequential>
   </target>
 
