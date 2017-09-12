@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <property name="workspacedir" location="C:\Users\KLE10\Perforce\KelwinWorkspace" />
+  <property name="tigerdir" location="C:\Tiger\" />
   <property name="tomcatdir" location="C:\Tiger\apache-tomcat-8.0.36" />
   <property name="tomeedir" location="C:\Tiger\apache-tomee-webprofile-1.7.4" />
   <property name="tomcatwebappsdir" location="${tomcatdir}\webapps" />
@@ -91,6 +92,24 @@
   <target name="agentnolib" description="Build QAGENT without libraries" depends="-agent">
     <delete file="${workspacedir}\QAGENT\target\QAGENT-dist.zip" />
   </target>
+
+  <target name="membrane" description="Build Middleware Membrane module">
+    <exec dir="${workspacedir}\MIDDLEWARE-INTEGRATION" executable="cmd">
+      <arg line="${cleanpackagecmd} membrane ${argsappenvcmd}" />
+    </exec>
+    <unzip src="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-MEMBRANE.zip" dest="${tigerdir}" />
+    <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-MEMBRANE.zip" />
+    <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-MEMBRANE.jar" />
+  </target>
+
+  <target name="gateway" description="Build Middleware QGateway module">
+    <exec dir="${workspacedir}\MIDDLEWARE-INTEGRATION" executable="cmd">
+      <arg line="${cleanpackagecmd} qgateway ${argsappenvcmd}" />
+    </exec>
+    <unzip src="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.zip" dest="${tigerdir}" />
+    <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.zip" />
+    <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.jar" />
+</target>
 
   <target name="-daemon" description="Build Daemon" depends="cleandaemon">
     <exec dir="${workspacedir}\DAEMON" executable="cmd">
@@ -220,6 +239,7 @@
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
+      <antcall target="membrane" />
       <antcall target="busservicelib" />
       <antcall target="daemonlib" />
       <antcall target="sqldaemonlib" />
@@ -234,6 +254,7 @@
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
+      <antcall target="membrane" />
       <antcall target="busservicenolib" />
       <antcall target="daemonnolib" />
       <antcall target="sqldaemonnolib" />
