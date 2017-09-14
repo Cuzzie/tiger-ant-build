@@ -239,7 +239,6 @@
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
-      <antcall target="membrane" />
       <antcall target="busservicelib" />
       <antcall target="daemonlib" />
       <antcall target="sqldaemonlib" />
@@ -254,7 +253,6 @@
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
-      <antcall target="membrane" />
       <antcall target="busservicenolib" />
       <antcall target="daemonnolib" />
       <antcall target="sqldaemonnolib" />
