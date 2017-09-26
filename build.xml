@@ -109,7 +109,7 @@
     <unzip src="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.zip" dest="${tigerdir}" />
     <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.zip" />
     <delete file="${workspacedir}\MIDDLEWARE-INTEGRATION\target\MIDDLEWARE-INTEGRATION-QGATEWAY.jar" />
-</target>
+  </target>
 
   <target name="-daemon" description="Build Daemon" depends="cleandaemon">
     <exec dir="${workspacedir}\DAEMON" executable="cmd">
@@ -253,6 +253,7 @@
       <antcall target="api" />
       <antcall target="busclient" />
       <antcall target="webstartfilter" />
+      <antcall target="membrane" />
       <antcall target="busservicenolib" />
       <antcall target="daemonnolib" />
       <antcall target="sqldaemonnolib" />
@@ -265,6 +266,7 @@
     <sequential>
       <antcall target="parent" />
       <antcall target="api" />
+      <antcall target="busservicelib" />
       <antcall target="domainlib" />
       <antcall target="portallib" />
     </sequential>
@@ -274,6 +276,7 @@
     <sequential>
       <antcall target="parent" />
       <antcall target="api" />
+      <antcall target="busservicenolib" />
       <antcall target="domainnolib" />
       <antcall target="portalnolib" />
     </sequential>
