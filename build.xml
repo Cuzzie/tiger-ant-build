@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <property name="workspacedir" location="C:\Users\KLE10\Perforce\KelwinWorkspace" />
-  <property name="tigerdir" location="C:\Tiger\" />
-  <property name="tomcatdir" location="C:\Tiger\apache-tomcat-8.0.36" />
-  <property name="tomeedir" location="C:\Tiger\apache-tomee-webprofile-1.7.4" />
+  <property name="workspacedir" location="C:\Users\KLE10\Perforce\KelwinWorkspaceNew" />
+  <property name="tigerdir" location="\\gdctmdaemon21\c$\Tiger" />
+  <property name="tomcatdir" location="\\gdctmdaemon21\c$\Tiger\apache-tomcat-8.0.36" />
+  <property name="tomeedir" location="\\gdctmdaemon21\c$\Tiger\apache-tomee-webprofile-1.7.4" />
   <property name="tomcatwebappsdir" location="${tomcatdir}\webapps" />
   <property name="tomcatlibzipdir" location="${tomcatdir}\libzip" />
   <property name="tomeewebappsdir" location="${tomeedir}\webapps" />
@@ -60,7 +60,13 @@
   </target>
 
   <target name="webstartfilter" description="Build Webstart Filter">
-    <exec dir="${workspacedir}\WEBSTART" executable="cmd">
+    <exec dir="${workspacedir}\WEBSTART-CLIENT" executable="cmd">
+      <arg line="${cleaninstallcmd}" />
+    </exec>
+  </target>
+
+  <target name="ptvclient" description="Build PTV Client">
+    <exec dir="${workspacedir}\PTV-CLIENT" executable="cmd">
       <arg line="${cleaninstallcmd}" />
     </exec>
   </target>
@@ -83,7 +89,7 @@
 
   <target name="-agent" description="Build QAGENT" depends="cleanagent">
     <exec dir="${workspacedir}\QAGENT" executable="cmd">
-      <arg line="${cleanpackagecmd} qagent ${argsappenvcmd}" />
+      <arg line="${cleanpackagecmd} middleware-agent ${argsappenvcmd}" />
     </exec>
     <move file="${workspacedir}\QAGENT\target\QAGENT.war" todir="${tomeewebappsdir}" />
     <delete dir="${workspacedir}\QAGENT\target\QAGENT" />
@@ -161,7 +167,7 @@
 
   <target name="-admin" description="Build Admin" depends="cleanadmin">
     <exec dir="${workspacedir}\WEB" executable="cmd">
-      <arg line="${cleanpackagecmd} admin ${argscmd}" />
+      <arg line="${cleanpackagecmd} adminWithAm ${argscmd}" />
     </exec>
     <move file="${workspacedir}\WEB\target\ADMIN.war" todir="${tomcatwebappsdir}" />
     <delete dir="${workspacedir}\WEB\target\ADMIN" />
@@ -177,7 +183,7 @@
 
   <target name="-root" description="Build Root" depends="cleanroot">
     <exec dir="${workspacedir}\PORTAL" executable="cmd">
-      <arg line="${cleanpackagecmd} portal ${argscmd}" />
+      <arg line="${cleanpackagecmd} portalWithAm ${argscmd}" />
     </exec>
     <move file="${workspacedir}\PORTAL\target\ROOT.war" todir="${tomcatwebappsdir}" />
     <delete dir="${workspacedir}\PORTAL\target\ROOT" />
@@ -262,23 +268,43 @@
     </sequential>
   </target>
 
-  <target name="buildpartiallib" description="Build API, DOMAIN, and PORTAL with libraries">
+  <target name="buildpartiallib" description="Build API, DOMAIN, BUS-SERVICE, DAEMON and PORTAL with libraries">
     <sequential>
       <antcall target="parent" />
       <antcall target="api" />
       <antcall target="busservicelib" />
+      <antcall target="daemonlib" />
       <antcall target="domainlib" />
       <antcall target="portallib" />
     </sequential>
   </target>
 
-  <target name="buildpartialnolib" description="Build API, DOMAIN, and PORTAL without libraries">
+  <target name="buildpartialnolib" description="Build API, DOMAIN, BUS-SERVICE, DAEMON and PORTAL without libraries">
     <sequential>
       <antcall target="parent" />
       <antcall target="api" />
       <antcall target="busservicenolib" />
+      <antcall target="daemonnolib" />
       <antcall target="domainnolib" />
       <antcall target="portalnolib" />
+    </sequential>
+  </target>
+
+  <target name="buildminilib" description="Build API, DOMAIN, BUS-SERVICE, and ROOT with libraries">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="busservicelib" />
+      <antcall target="domainlib" />
+      <antcall target="rootlib" />
+    </sequential>
+  </target>
+
+  <target name="buildmininolib" description="Build API, DOMAIN, BUS-SERVICE and ROOT without libraries">
+    <sequential>
+      <antcall target="api" />
+      <antcall target="busservicenolib" />
+      <antcall target="domainnolib" />
+      <antcall target="rootnolib" />
     </sequential>
   </target>
 
